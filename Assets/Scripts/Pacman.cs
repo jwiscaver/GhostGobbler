@@ -3,7 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Movement))]
 public class Pacman : MonoBehaviour
 {
-    //[SerializeField] private AnimatedSprite deathSequence;
+    [SerializeField]
+    //private AnimatedSprite deathSequence;
     private SpriteRenderer spriteRenderer;
     private Movement movement;
     private new Collider2D collider;
@@ -34,6 +35,7 @@ public class Pacman : MonoBehaviour
             movement.SetDirection(Vector2.right);
         }
 
+        // Rotate pacman to face the movement direction
         float angle = Mathf.Atan2(movement.direction.y, movement.direction.x);
         transform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
     }
@@ -44,7 +46,7 @@ public class Pacman : MonoBehaviour
         spriteRenderer.enabled = true;
         collider.enabled = true;
         //deathSequence.enabled = false;
-        //movement.ResetState();
+        movement.ResetState();
         gameObject.SetActive(true);
     }
 

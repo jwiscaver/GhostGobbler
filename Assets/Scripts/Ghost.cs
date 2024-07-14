@@ -1,28 +1,21 @@
 using UnityEngine;
 
 [DefaultExecutionOrder(-10)]
-[RequireComponent(typeof(GhostMovement))]
+[RequireComponent(typeof(Movement))]
 public class Ghost : MonoBehaviour
 {
-    [Tooltip("Layer mask for detecting Pacman.")]
-    [SerializeField] private LayerMask pacmanLayer;
-
-    [Tooltip("Points obtained by eating ghosts.")]
-    [SerializeField] private int points = 200;
-
-    public GhostMovement movement { get; private set; }
+    public Movement movement { get; private set; }
     public GhostHome home { get; private set; }
     public GhostScatter scatter { get; private set; }
     public GhostChase chase { get; private set; }
     public GhostFrightened frightened { get; private set; }
     public GhostBehavior initialBehavior;
     public Transform target;
-
-    public int Points => points;
+    public int points = 200;
 
     private void Awake()
     {
-        movement = GetComponent<GhostMovement>();
+        movement = GetComponent<Movement>();
         home = GetComponent<GhostHome>();
         scatter = GetComponent<GhostScatter>();
         chase = GetComponent<GhostChase>();
@@ -62,7 +55,7 @@ public class Ghost : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (((1 << collision.gameObject.layer) & pacmanLayer) != 0)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Pacman"))
         {
             if (frightened.enabled)
             {

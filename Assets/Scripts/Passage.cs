@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class Teleport : MonoBehaviour
+public class Passage : MonoBehaviour
 {
     public Transform connection;
 
@@ -11,4 +11,5 @@ public class Teleport : MonoBehaviour
         position.z = other.transform.position.z;
         other.transform.position = position;
     }
+
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Ghost))]
 public abstract class GhostBehavior : MonoBehaviour
@@ -6,9 +7,12 @@ public abstract class GhostBehavior : MonoBehaviour
     public Ghost ghost { get; private set; }
     public float duration;
 
+    private Coroutine disableCoroutine;
+
     private void Awake()
     {
         ghost = GetComponent<Ghost>();
+        this.enabled = false;
     }
 
     public void Enable()
@@ -20,15 +24,27 @@ public abstract class GhostBehavior : MonoBehaviour
     {
         enabled = true;
 
-        CancelInvoke();
-        Invoke(nameof(Disable), duration);
+        if (disableCoroutine != null)
+        {
+            StopCoroutine(disableCoroutine);
+        }
+        disableCoroutine = StartCoroutine(DisableAfterDuration(duration));
+    }
+
+    private IEnumerator DisableAfterDuration(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        Disable();
     }
 
     public virtual void Disable()
     {
         enabled = false;
 
-        CancelInvoke();
+        if (disableCoroutine != null)
+        {
+            StopCoroutine(disableCoroutine);
+            disableCoroutine = null;
+        }
     }
-
 }

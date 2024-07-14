@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
 using System.Collections;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -47,25 +46,25 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        NewGame();
+        StartNewGame();
     }
 
     private void Update()
     {
         if (lives <= 0 && Input.anyKeyDown)
         {
-            NewGame();
+            StartNewGame();
         }
     }
 
-    private void NewGame()
+    private void StartNewGame()
     {
         SetScore(0);
         SetLives(3);
-        NewRound();
+        StartNewRound();
     }
 
-    private void NewRound()
+    private void StartNewRound()
     {
         gameOverText.enabled = false;
 
@@ -74,10 +73,10 @@ public class GameManager : MonoBehaviour
             pellet.gameObject.SetActive(true);
         }
 
-        ResetPacmanAndGhosts();
+        ResetGameState();
     }
 
-    private void ResetPacmanAndGhosts()
+    private void ResetGameState()
     {
         foreach (Ghost ghost in ghosts)
         {
@@ -87,7 +86,7 @@ public class GameManager : MonoBehaviour
         pacman.ResetState();
     }
 
-    private void GameOver()
+    private void EndGame()
     {
         gameOverText.enabled = true;
 
@@ -123,13 +122,13 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            GameOver();
+            EndGame();
         }
     }
 
     public void GhostEaten(Ghost ghost)
     {
-        int points = ghost.Points * ghostMultiplier;
+        int points = ghost.points * ghostMultiplier;
         SetScore(score + points);
 
         ghostMultiplier++;
@@ -139,21 +138,21 @@ public class GameManager : MonoBehaviour
     {
         pellet.gameObject.SetActive(false);
 
-        SetScore(score + pellet.Points);
+        SetScore(score + pellet.points);
 
         if (!HasRemainingPellets())
         {
             pacman.gameObject.SetActive(false);
-            StartCoroutine(NewRoundAfterDelay(3f));
+            StartCoroutine(StartNewRoundAfterDelay(3f));
         }
     }
 
     public void PowerPelletEaten(PowerPellet pellet)
     {
-        /*foreach (Ghost ghost in ghosts)
+        foreach (Ghost ghost in ghosts)
         {
             ghost.frightened.Enable(pellet.duration);
-        }*/
+        }
 
         PelletEaten(pellet);
         StopCoroutine(nameof(ResetGhostMultiplierAfterDelay));
@@ -176,13 +175,13 @@ public class GameManager : MonoBehaviour
     private IEnumerator ResetStateAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        ResetPacmanAndGhosts();
+        ResetGameState();
     }
 
-    private IEnumerator NewRoundAfterDelay(float delay)
+    private IEnumerator StartNewRoundAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        NewRound();
+        StartNewRound();
     }
 
     private IEnumerator ResetGhostMultiplierAfterDelay(float delay)

@@ -24,7 +24,8 @@ public class GhostScatter : GhostBehavior
                 index++;
 
                 // Wrap the index back around if overflowed
-                if (index >= node.availableDirections.Count) {
+                if (index >= node.availableDirections.Count)
+                {
                     index = 0;
                 }
             }
@@ -32,5 +33,4 @@ public class GhostScatter : GhostBehavior
             ghost.movement.SetDirection(node.availableDirections[index]);
         }
     }
-
 }
