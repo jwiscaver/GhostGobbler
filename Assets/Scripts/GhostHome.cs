@@ -3,8 +3,14 @@ using UnityEngine;
 
 public class GhostHome : GhostBehavior
 {
-    public Transform inside;
-    public Transform outside;
+    [Tooltip("Transform representing the inside position of the ghost home.")]
+    [SerializeField] public Transform inside;
+
+    [Tooltip("Transform representing the outside position of the ghost home.")]
+    [SerializeField] public Transform outside;
+
+    [Tooltip("Layer mask for detecting obstacles.")]
+    [SerializeField] private LayerMask obstacleLayerMask;
 
     private void OnEnable()
     {
@@ -24,7 +30,7 @@ public class GhostHome : GhostBehavior
     {
         // Reverse direction everytime the ghost hits a wall to create the
         // effect of the ghost bouncing around the home
-        if (enabled && collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        if (enabled && ((1 << collision.gameObject.layer) & obstacleLayerMask) != 0)
         {
             ghost.movement.SetDirection(-ghost.movement.Direction);
         }
@@ -65,5 +71,4 @@ public class GhostHome : GhostBehavior
         ghost.movement.rigidbody.isKinematic = false;
         ghost.movement.enabled = true;
     }
-
 }

@@ -81,7 +81,7 @@ public class GhostFrightened : GhostBehavior
                 // If the distance in this direction is greater than the current
                 // max distance then this direction becomes the new farthest
                 Vector3 newPosition = transform.position + new Vector3(availableDirection.x, availableDirection.y);
-                float distance = (ghost.target.position - newPosition).sqrMagnitude;
+                float distance = (ghost.Target.position - newPosition).sqrMagnitude;
 
                 if (distance > maxDistance)
                 {
@@ -98,7 +98,8 @@ public class GhostFrightened : GhostBehavior
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Pacman"))
         {
-            if (enabled) {
+            if (enabled)
+            {
                 Eaten();
             }
         }

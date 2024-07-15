@@ -323,7 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d7f2cb27e699b47a997a794f901408, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
+  speed: 7
   speedMultiplier: 1
   initialDirection: {x: 0, y: 0}
   obstacleLayer:
@@ -342,8 +342,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialBehavior: {fileID: 0}
-  target: {fileID: 0}
+  pacmanLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   points: 200
+  target: {fileID: 0}
 --- !u!114 &4510228504179398634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,6 +362,9 @@ MonoBehaviour:
   duration: 0
   inside: {fileID: 0}
   outside: {fileID: 0}
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!114 &4744431960441555414
 MonoBehaviour:
   m_ObjectHideFlags: 0

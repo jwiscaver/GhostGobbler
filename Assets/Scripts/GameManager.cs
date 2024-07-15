@@ -239,7 +239,7 @@ public class GameManager : MonoBehaviour
 
     public void GhostEaten(Ghost ghost)
     {
-        int points = ghost.points * ghostMultiplier;
+        int points = ghost.Points * ghostMultiplier;
         SetScore(score + points);
 
         ghostMultiplier++;
