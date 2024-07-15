@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("TextMeshProUGUI component for displaying the score.")]
     [SerializeField] private TextMeshProUGUI scoreText;
 
+    [Tooltip("TextMeshProUGUI component for displaying the high score.")]
+    [SerializeField] private TextMeshProUGUI highScoreText;
+
     [Tooltip("Transform for displaying lives on the UI canvas.")]
     [SerializeField] private Transform livesDisplay;
 
@@ -32,12 +35,31 @@ public class GameManager : MonoBehaviour
     [Tooltip("TextMeshProUGUI component for displaying 'Ready' text.")]
     [SerializeField] private TextMeshProUGUI readyText;
 
+    [Tooltip("Initial number of lives.")]
+    [SerializeField] private int initialLives = 3;
+
+    [Tooltip("Delay before hiding the 'Ready' text (in seconds).")]
+    [SerializeField] private float readyTextDisplayTime = 3f;
+
+    [Tooltip("Delay before resetting the game state after Pacman is eaten (in seconds).")]
+    [SerializeField] private float resetStateDelay = 3f;
+
+    [Tooltip("Delay before starting a new round after all pellets are eaten (in seconds).")]
+    [SerializeField] private float newRoundDelay = 3f;
+
+    [Tooltip("Delay before resetting the ghost multiplier after a power pellet is eaten (in seconds).")]
+    [SerializeField] private float resetGhostMultiplierDelay = 3f;
+
     private int ghostMultiplier = 1;
-    private int lives = 3;
+    private int lives;
     private int score = 0;
+    private int highScore = 0;
     private bool isGameReady = false;
 
     private List<Image> lifeImages = new List<Image>();
+
+    private List<Movement> ghostMovements = new List<Movement>();
+    private Movement pacmanMovement;
 
     public int Lives => lives;
     public int Score => score;
@@ -66,6 +88,21 @@ public class GameManager : MonoBehaviour
                 lifeImages.Add(image);
             }
         }
+
+        // Cache references to ghost movements
+        foreach (Ghost ghost in ghosts)
+        {
+            Movement movement = ghost.GetComponent<Movement>();
+            if (movement != null)
+            {
+                ghostMovements.Add(movement);
+            }
+        }
+
+        // Cache reference to Pacman's movement
+        pacmanMovement = pacman.GetComponent<Movement>();
+
+        LoadHighScore();
         StartNewGame();
     }
 
@@ -80,7 +117,7 @@ public class GameManager : MonoBehaviour
     private void StartNewGame()
     {
         SetScore(0);
-        SetLives(3);
+        SetLives(initialLives);
         StartNewRound();
     }
 
@@ -99,14 +136,14 @@ public class GameManager : MonoBehaviour
 
     private void ResetGameState()
     {
-        foreach (Ghost ghost in ghosts)
+        foreach (Movement ghostMovement in ghostMovements)
         {
-            ghost.ResetState();
-            ghost.GetComponent<Movement>().enabled = false; // Disable ghost movement until game is ready
+            ghostMovement.GetComponent<Ghost>().ResetState();
+            ghostMovement.enabled = false; // Disable ghost movement until game is ready
         }
 
         pacman.ResetState();
-        pacman.GetComponent<Movement>().enabled = false; // Disable Pacman movement until game is ready
+        pacmanMovement.enabled = false; // Disable Pacman movement until game is ready
     }
 
     private void EndGame()
@@ -119,6 +156,11 @@ public class GameManager : MonoBehaviour
         }
 
         pacman.gameObject.SetActive(false);
+
+        if (score > highScore)
+        {
+            SetHighScore(score);
+        }
     }
 
     private void SetLives(int lives)
@@ -131,6 +173,19 @@ public class GameManager : MonoBehaviour
     {
         this.score = score;
         scoreText.text = score.ToString("D2");
+
+        if (score > highScore)
+        {
+            SetHighScore(score);
+        }
+    }
+
+    private void SetHighScore(int score)
+    {
+        highScore = score;
+        highScoreText.text = highScore.ToString("D2");
+        PlayerPrefs.SetInt("HighScore", highScore);
+        PlayerPrefs.Save();
     }
 
     private void UpdateLivesDisplay()
@@ -144,7 +199,7 @@ public class GameManager : MonoBehaviour
     private void ShowReadyText()
     {
         readyText.enabled = true;
-        StartCoroutine(HideReadyTextAfterDelay(3f));  // Display for 3 seconds
+        StartCoroutine(HideReadyTextAfterDelay(readyTextDisplayTime));
     }
 
     private IEnumerator HideReadyTextAfterDelay(float delay)
@@ -158,12 +213,12 @@ public class GameManager : MonoBehaviour
     {
         isGameReady = true;
 
-        foreach (Ghost ghost in ghosts)
+        foreach (Movement ghostMovement in ghostMovements)
         {
-            ghost.GetComponent<Movement>().enabled = true; // Enable ghost movement
+            ghostMovement.enabled = true; // Enable ghost movement
         }
 
-        pacman.GetComponent<Movement>().enabled = true; // Enable Pacman movement
+        pacmanMovement.enabled = true; // Enable Pacman movement
     }
 
     public void PacmanEaten()
@@ -174,7 +229,7 @@ public class GameManager : MonoBehaviour
 
         if (lives > 0)
         {
-            StartCoroutine(ResetStateAfterDelay(3f));
+            StartCoroutine(ResetStateAfterDelay(resetStateDelay));
         }
         else
         {
@@ -199,7 +254,7 @@ public class GameManager : MonoBehaviour
         if (!HasRemainingPellets())
         {
             pacman.gameObject.SetActive(false);
-            StartCoroutine(StartNewRoundAfterDelay(3f));
+            StartCoroutine(StartNewRoundAfterDelay(newRoundDelay));
         }
     }
 
@@ -212,7 +267,7 @@ public class GameManager : MonoBehaviour
 
         PelletEaten(pellet);
         StopCoroutine(nameof(ResetGhostMultiplierAfterDelay));
-        StartCoroutine(ResetGhostMultiplierAfterDelay(pellet.duration));
+        StartCoroutine(ResetGhostMultiplierAfterDelay(resetGhostMultiplierDelay));
     }
 
     private bool HasRemainingPellets()
@@ -245,5 +300,11 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         ghostMultiplier = 1;
+    }
+
+    private void LoadHighScore()
+    {
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        highScoreText.text = highScore.ToString("D2");
     }
 }

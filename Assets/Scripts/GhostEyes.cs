@@ -19,16 +19,20 @@ public class GhostEyes : MonoBehaviour
 
     private void Update()
     {
-        if (movement.direction == Vector2.up) {
+        if (movement.Direction == Vector2.up)
+        {
             spriteRenderer.sprite = up;
         }
-        else if (movement.direction == Vector2.down) {
+        else if (movement.Direction == Vector2.down)
+        {
             spriteRenderer.sprite = down;
         }
-        else if (movement.direction == Vector2.left) {
+        else if (movement.Direction == Vector2.left)
+        {
             spriteRenderer.sprite = left;
         }
-        else if (movement.direction == Vector2.right) {
+        else if (movement.Direction == Vector2.right)
+        {
             spriteRenderer.sprite = right;
         }
     }

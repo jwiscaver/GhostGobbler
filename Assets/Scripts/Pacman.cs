@@ -1,22 +1,38 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Movement))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Collider2D))]
 public class Pacman : MonoBehaviour
 {
+    [Tooltip("Sprite renderer component for Pacman.")]
     [SerializeField]
-    //private AnimatedSprite deathSequence;
     private SpriteRenderer spriteRenderer;
+
+    [Tooltip("Animator component for handling animations.")]
+    [SerializeField]
+    private Animator animator;
+
     private Movement movement;
     private new Collider2D collider;
 
     private void Awake()
     {
+        // Cache components
         spriteRenderer = GetComponent<SpriteRenderer>();
         movement = GetComponent<Movement>();
         collider = GetComponent<Collider2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
+    {
+        HandleInput();
+        RotatePacman();
+    }
+
+    private void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -34,10 +50,13 @@ public class Pacman : MonoBehaviour
         {
             movement.SetDirection(Vector2.right);
         }
+    }
 
-        // Rotate pacman to face the movement direction
-        float angle = Mathf.Atan2(movement.direction.y, movement.direction.x);
-        transform.rotation = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, Vector3.forward);
+    private void RotatePacman()
+    {
+        // Rotate Pacman to face the movement direction
+        float angle = Mathf.Atan2(movement.Direction.y, movement.Direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
     public void ResetState()
@@ -45,19 +64,19 @@ public class Pacman : MonoBehaviour
         enabled = true;
         spriteRenderer.enabled = true;
         collider.enabled = true;
-        //deathSequence.enabled = false;
         movement.ResetState();
         gameObject.SetActive(true);
+
+        // Reset Animator to the default state
+        animator.ResetTrigger("Die");
+        animator.Play("Movement"); // Ensure to replace "Pacman_Idle" with your idle/default animation state name
     }
 
     public void DeathSequence()
     {
         enabled = false;
-        spriteRenderer.enabled = false;
-        collider.enabled = false;
         movement.enabled = false;
-        //deathSequence.enabled = true;
-        //deathSequence.Restart();
+        collider.enabled = false;
+        animator.SetTrigger("Die"); // Trigger death animation
     }
-
 }
