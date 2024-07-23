@@ -3,7 +3,11 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Pellet : MonoBehaviour
 {
-    private int points = 10;
+    [Tooltip("Points awarded for eating this pellet.")]
+    [SerializeField] private int points = 10;
+
+    [Tooltip("Layer mask for detecting Pacman.")]
+    [SerializeField] private LayerMask pacmanLayerMask;
 
     public int Points => points;
 
@@ -14,7 +18,7 @@ public class Pellet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Pacman"))
+        if ((pacmanLayerMask.value & (1 << other.gameObject.layer)) != 0)
         {
             Eat();
         }

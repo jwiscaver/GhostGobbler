@@ -144,3 +144,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points: 10
+  pacmanLayerMask:
+    serializedVersion: 2
+    m_Bits: 64

@@ -50,11 +50,25 @@ public class GameManager : MonoBehaviour
     [Tooltip("Delay before resetting the ghost multiplier after a power pellet is eaten (in seconds).")]
     [SerializeField] private float resetGhostMultiplierDelay = 3f;
 
+    [Tooltip("Fruit UI Manager")]
+    [SerializeField] private FruitUIManager fruitUIManager;
+
+    [Tooltip("Fruit Prefabs")]
+    [SerializeField] private GameObject[] fruitPrefabs;
+
+    [Tooltip("Fruit Spawn Point")]
+    [SerializeField] private Transform fruitSpawnPoint;
+
     private int ghostMultiplier = 1;
     private int lives;
     private int score = 0;
     private int highScore = 0;
+    private int currentLevel = 0;
     private bool isGameReady = false;
+    private bool fruitActive = false;
+    private int pelletsEaten = 0;
+    private GameObject currentFruit;
+    private Coroutine fruitCoroutine;
 
     private List<Image> lifeImages = new List<Image>();
 
@@ -118,6 +132,7 @@ public class GameManager : MonoBehaviour
     {
         SetScore(0);
         SetLives(initialLives);
+        currentLevel = 0;
         StartNewRound();
     }
 
@@ -132,6 +147,7 @@ public class GameManager : MonoBehaviour
         }
 
         ResetGameState();
+        fruitUIManager.UpdateFruitUI(currentLevel);
     }
 
     private void ResetGameState()
@@ -169,7 +185,7 @@ public class GameManager : MonoBehaviour
         UpdateLivesDisplay();
     }
 
-    private void SetScore(int score)
+    public void SetScore(int score)
     {
         this.score = score;
         scoreText.text = score.ToString("D2");
@@ -248,6 +264,9 @@ public class GameManager : MonoBehaviour
     public void PelletEaten(Pellet pellet)
     {
         pellet.gameObject.SetActive(false);
+        pelletsEaten++;
+
+        CheckFruitSpawn();
 
         SetScore(score + pellet.Points);
 
@@ -306,5 +325,58 @@ public class GameManager : MonoBehaviour
     {
         highScore = PlayerPrefs.GetInt("HighScore", 0);
         highScoreText.text = highScore.ToString("D2");
+    }
+
+    private void CheckFruitSpawn()
+    {
+        if ((pelletsEaten == 70 || pelletsEaten == 170) && !fruitActive)
+        {
+            FruitType fruitType = GetFruitTypeForLevel(currentLevel);
+            SpawnFruit(fruitType);
+        }
+    }
+
+    private void SpawnFruit(FruitType fruitType)
+    {
+        if (currentFruit != null)
+        {
+            Destroy(currentFruit);
+        }
+
+        currentFruit = Instantiate(fruitPrefabs[(int)fruitType], fruitSpawnPoint.position, Quaternion.identity);
+        fruitActive = true;
+        fruitCoroutine = StartCoroutine(FruitLifetimeCoroutine());
+    }
+
+    private IEnumerator FruitLifetimeCoroutine()
+    {
+        yield return new WaitForSeconds(9f);
+        if (currentFruit != null)
+        {
+            Destroy(currentFruit);
+            fruitActive = false;
+        }
+    }
+
+    private FruitType GetFruitTypeForLevel(int level)
+    {
+        if (level < 8)
+        {
+            return (FruitType)level;
+        }
+        else if (level < 19)
+        {
+            return (FruitType)((level - 8) % 7);
+        }
+        else
+        {
+            return FruitType.Key;
+        }
+    }
+
+    private void LoadNextLevel()
+    {
+        currentLevel++;
+        StartNewRound();
     }
 }
