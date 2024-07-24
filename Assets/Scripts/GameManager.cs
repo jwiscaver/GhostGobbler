@@ -93,7 +93,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // Cache references to the life images
         foreach (Transform child in livesDisplay)
         {
             Image image = child.GetComponent<Image>();
@@ -103,7 +102,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Cache references to ghost movements
         foreach (Ghost ghost in ghosts)
         {
             Movement movement = ghost.GetComponent<Movement>();
@@ -113,7 +111,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Cache reference to Pacman's movement
         pacmanMovement = pacman.GetComponent<Movement>();
 
         LoadHighScore();
@@ -155,11 +152,11 @@ public class GameManager : MonoBehaviour
         foreach (Movement ghostMovement in ghostMovements)
         {
             ghostMovement.GetComponent<Ghost>().ResetState();
-            ghostMovement.enabled = false; // Disable ghost movement until game is ready
+            ghostMovement.enabled = false;
         }
 
         pacman.ResetState();
-        pacmanMovement.enabled = false; // Disable Pacman movement until game is ready
+        pacmanMovement.enabled = false;
     }
 
     private void EndGame()
@@ -231,10 +228,10 @@ public class GameManager : MonoBehaviour
 
         foreach (Movement ghostMovement in ghostMovements)
         {
-            ghostMovement.enabled = true; // Enable ghost movement
+            ghostMovement.enabled = true;
         }
 
-        pacmanMovement.enabled = true; // Enable Pacman movement
+        pacmanMovement.enabled = true;
     }
 
     public void PacmanEaten()
@@ -306,7 +303,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         ResetGameState();
-        ShowReadyText(); // Show "Ready" text before restarting the game
+        ShowReadyText();
     }
 
     private IEnumerator StartNewRoundAfterDelay(float delay)
