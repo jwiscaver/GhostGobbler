@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [DefaultExecutionOrder(-10)]
-[RequireComponent(typeof(Movement))]
+[RequireComponent(typeof(GhostMovement))]
 [RequireComponent(typeof(GhostHome))]
 [RequireComponent(typeof(GhostScatter))]
 [RequireComponent(typeof(GhostChase))]
@@ -23,7 +23,7 @@ public class Ghost : MonoBehaviour
     public int Points => points;
     public Transform Target => target;
 
-    public Movement movement { get; private set; }
+    public GhostMovement movement { get; private set; }
     public GhostHome home { get; private set; }
     public GhostScatter scatter { get; private set; }
     public GhostChase chase { get; private set; }
@@ -32,7 +32,7 @@ public class Ghost : MonoBehaviour
     private void Awake()
     {
         // Cache component references
-        movement = GetComponent<Movement>();
+        movement = GetComponent<GhostMovement>();
         home = GetComponent<GhostHome>();
         scatter = GetComponent<GhostScatter>();
         chase = GetComponent<GhostChase>();

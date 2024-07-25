@@ -217,8 +217,8 @@ GameObject:
   - component: {fileID: 619385127458319076}
   - component: {fileID: 8991122915293382213}
   - component: {fileID: 3150822270420328991}
-  - component: {fileID: 6469929211693721584}
   - component: {fileID: 6269315943795187731}
+  - component: {fileID: -6852188629035068158}
   - component: {fileID: 4510228504179398634}
   - component: {fileID: 4744431960441555414}
   - component: {fileID: 1931191654500233255}
@@ -311,24 +311,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &6469929211693721584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7129644814907583935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79d7f2cb27e699b47a997a794f901408, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 7
-  speedMultiplier: 1
-  initialDirection: {x: 0, y: 0}
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!114 &6269315943795187731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +329,24 @@ MonoBehaviour:
     m_Bits: 64
   points: 200
   target: {fileID: 0}
+--- !u!114 &-6852188629035068158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7129644814907583935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8dd3bc90912945eab6b1255280d5a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 7
+  speedMultiplier: 1
+  initialDirection: {x: 0, y: 0}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!114 &4510228504179398634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,6 +418,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6900388801724425123}
   - component: {fileID: 5083057456032776041}
+  - component: {fileID: 9105509580964544864}
   m_Layer: 7
   m_Name: Eyes
   m_TagString: Untagged
@@ -492,6 +493,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &9105509580964544864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7593274650475875049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c933bc77d8cbcb4083909f40e3a0a9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  up: {fileID: 21300000, guid: 7391304e6dcdc594484288107bfd217f, type: 3}
+  down: {fileID: 21300000, guid: b97167c35748db84fb4d32f4f242922a, type: 3}
+  left: {fileID: 21300000, guid: d65aa956b7569874fab274083826a77f, type: 3}
+  right: {fileID: 21300000, guid: 07ddb51374d9f19458dad756bbbcd880, type: 3}
 --- !u!1 &8556600329794020328
 GameObject:
   m_ObjectHideFlags: 0

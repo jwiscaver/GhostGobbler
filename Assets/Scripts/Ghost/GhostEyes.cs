@@ -9,12 +9,12 @@ public class GhostEyes : MonoBehaviour
     public Sprite right;
 
     private SpriteRenderer spriteRenderer;
-    private Movement movement;
+    private GhostMovement movement;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        movement = GetComponentInParent<Movement>();
+        movement = GetComponentInParent<GhostMovement>();
     }
 
     private void Update()
