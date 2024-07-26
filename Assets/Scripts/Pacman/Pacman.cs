@@ -19,7 +19,6 @@ public class Pacman : MonoBehaviour
 
     private void Awake()
     {
-        // Cache components
         spriteRenderer = GetComponent<SpriteRenderer>();
         movement = GetComponent<Movement>();
         collider = GetComponent<Collider2D>();
@@ -54,7 +53,6 @@ public class Pacman : MonoBehaviour
 
     private void RotatePacman()
     {
-        // Rotate Pacman to face the movement direction
         float angle = Mathf.Atan2(movement.Direction.y, movement.Direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
@@ -67,9 +65,8 @@ public class Pacman : MonoBehaviour
         movement.ResetState();
         gameObject.SetActive(true);
 
-        // Reset Animator to the default state
         animator.ResetTrigger("Die");
-        animator.Play("Movement"); // Ensure to replace "Pacman_Idle" with your idle/default animation state name
+        animator.Play("Movement");
     }
 
     public void DeathSequence()
@@ -77,6 +74,6 @@ public class Pacman : MonoBehaviour
         enabled = false;
         movement.enabled = false;
         collider.enabled = false;
-        animator.SetTrigger("Die"); // Trigger death animation
+        animator.SetTrigger("Die");
     }
 }

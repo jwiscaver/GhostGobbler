@@ -22,6 +22,12 @@ public abstract class GhostBehavior : MonoBehaviour
 
     public virtual void Enable(float duration)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            Debug.LogWarning("Cannot enable behavior because the game object is inactive.");
+            return;
+        }
+
         enabled = true;
 
         if (disableCoroutine != null)

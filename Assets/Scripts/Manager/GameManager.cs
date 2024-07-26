@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
 
     private List<Image> lifeImages = new List<Image>();
 
-    private List<Movement> ghostMovements = new List<Movement>();
+    private List<GhostMovement> ghostMovements = new List<GhostMovement>();
     private Movement pacmanMovement;
 
     public int Lives => lives;
@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
 
         foreach (Ghost ghost in ghosts)
         {
-            Movement movement = ghost.GetComponent<Movement>();
+            GhostMovement movement = ghost.GetComponent<GhostMovement>();
             if (movement != null)
             {
                 ghostMovements.Add(movement);
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
 
     private void ResetGameState()
     {
-        foreach (Movement ghostMovement in ghostMovements)
+        foreach (GhostMovement ghostMovement in ghostMovements)
         {
             ghostMovement.GetComponent<Ghost>().ResetState();
             ghostMovement.enabled = false;
@@ -226,7 +226,7 @@ public class GameManager : MonoBehaviour
     {
         isGameReady = true;
 
-        foreach (Movement ghostMovement in ghostMovements)
+        foreach (GhostMovement ghostMovement in ghostMovements)
         {
             ghostMovement.enabled = true;
         }

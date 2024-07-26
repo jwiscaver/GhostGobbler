@@ -31,7 +31,6 @@ public class Ghost : MonoBehaviour
 
     private void Awake()
     {
-        // Cache component references
         movement = GetComponent<GhostMovement>();
         home = GetComponent<GhostHome>();
         scatter = GetComponent<GhostScatter>();
