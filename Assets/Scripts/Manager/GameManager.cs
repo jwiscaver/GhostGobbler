@@ -71,7 +71,6 @@ public class GameManager : MonoBehaviour
     private Coroutine fruitCoroutine;
 
     private List<Image> lifeImages = new List<Image>();
-
     private List<GhostMovement> ghostMovements = new List<GhostMovement>();
     private Movement pacmanMovement;
 
@@ -236,7 +235,32 @@ public class GameManager : MonoBehaviour
 
     public void PacmanEaten()
     {
+        StartCoroutine(PacmanDeathSequence());
+    }
+
+    private IEnumerator PacmanDeathSequence()
+    {
+        // Stop all movements
+        pacmanMovement.enabled = false;
+        foreach (GhostMovement ghostMovement in ghostMovements)
+        {
+            ghostMovement.enabled = false;
+        }
+
+        // Short delay before playing the death animation
+        yield return new WaitForSeconds(1f);
+
+        // Hide the ghosts
+        foreach (Ghost ghost in ghosts)
+        {
+            ghost.gameObject.SetActive(false);
+        }
+
+        // Play death animation
         pacman.DeathSequence();
+
+        // Wait for the death animation to finish (assuming 1 second for the animation)
+        yield return new WaitForSeconds(1f);
 
         SetLives(lives - 1);
 

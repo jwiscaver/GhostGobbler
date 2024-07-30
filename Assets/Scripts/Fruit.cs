@@ -8,6 +8,13 @@ public class Fruit : MonoBehaviour
     [Tooltip("Type of fruit.")]
     [SerializeField] private FruitType fruitType;
 
+    private UIManager uiManager;
+
+    private void Start()
+    {
+        uiManager = FindObjectOfType<UIManager>();
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if ((pacmanLayerMask.value & (1 << other.gameObject.layer)) != 0)
@@ -18,7 +25,14 @@ public class Fruit : MonoBehaviour
 
     private void EatFruit()
     {
-        GameManager.Instance.SetScore(GameManager.Instance.Score + (int)fruitType);
+        int points = (int)fruitType;
+        GameManager.Instance.SetScore(GameManager.Instance.Score + points);
+
+        if (uiManager != null)
+        {
+            gameObject.SetActive(false);
+            uiManager.ShowPoints(points);
+        }
 
         Destroy(gameObject);
     }
