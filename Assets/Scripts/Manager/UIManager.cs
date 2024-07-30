@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
     [Tooltip("TextMeshProUGUI component for displaying points from eating fruit.")]
     [SerializeField] private TextMeshProUGUI fruitPointsText;
 
-    [SerializeField] private float displayDuration = 2.0f;
+    [SerializeField] private float displayDuration = 1.0f;
 
     private void Start()
     {

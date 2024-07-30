@@ -9167,6 +9167,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1971176997}
     - target: {fileID: 8966490500082269008, guid: 780837f3b48eea5e8b0ebcaa7690b0ed, type: 3}
+      propertyPath: pointsDisplayPrefab
+      value: 
+      objectReference: {fileID: 7682265527993650493, guid: 09eb3e65ac6910f5498320108a3b7abf, type: 3}
+    - target: {fileID: 8966490500082269008, guid: 780837f3b48eea5e8b0ebcaa7690b0ed, type: 3}
       propertyPath: ghosts.Array.data[0]
       value: 
       objectReference: {fileID: 152938661}

@@ -1,8 +1,8 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -59,6 +59,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("Fruit Spawn Point")]
     [SerializeField] private Transform fruitSpawnPoint;
 
+    [Tooltip("Prefab for displaying points when a ghost is eaten.")]
+    [SerializeField] private GameObject pointsDisplayPrefab;
+
     private int ghostMultiplier = 1;
     private int lives;
     private int score = 0;
@@ -69,6 +72,7 @@ public class GameManager : MonoBehaviour
     private int pelletsEaten = 0;
     private GameObject currentFruit;
     private Coroutine fruitCoroutine;
+    private Canvas gameUICanvas;
 
     private List<Image> lifeImages = new List<Image>();
     private List<GhostMovement> ghostMovements = new List<GhostMovement>();
@@ -276,10 +280,42 @@ public class GameManager : MonoBehaviour
 
     public void GhostEaten(Ghost ghost)
     {
-        int points = ghost.Points * ghostMultiplier;
+        // Points calculation based on ghostMultiplier
+        int points = 200 * (int)Mathf.Pow(2, ghostMultiplier - 1);
         SetScore(score + points);
 
+        // Show points in the UI
+        ShowPoints(ghost, points);
+
+        // Increase the ghost multiplier for the next ghost
         ghostMultiplier++;
+    }
+
+    private void ShowPoints(Ghost ghost, int points)
+    {
+        if (pointsDisplayPrefab != null)
+        {
+            GameObject popupInstance = Instantiate(pointsDisplayPrefab);
+            gameUICanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
+
+            RectTransform rectTransform = popupInstance.GetComponent<RectTransform>();
+            rectTransform.SetParent(gameUICanvas.transform, false);
+
+            //SpriteRenderer ghostSprite = ghost.GetComponent<SpriteRenderer>();
+            //float offsetAboveHead = ghostSprite.bounds.size.y / 2 + 2f;
+            //Vector3 adjustedPosition = ghost.transform.position + new Vector3(0, offsetAboveHead, 0);
+
+            Vector2 screenPosition = Camera.main.WorldToScreenPoint(ghost.transform.position);
+            rectTransform.position = screenPosition;
+
+            TMP_Text pointsText = popupInstance.GetComponent<TMP_Text>();
+            if (pointsText != null)
+            {
+                pointsText.text = "+" + points.ToString();
+            }
+
+            Destroy(popupInstance, 1.0f);
+        }
     }
 
     public void PelletEaten(Pellet pellet)
