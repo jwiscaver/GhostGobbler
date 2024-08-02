@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Game.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/Menu.unity
+    guid: bddc0e3bcf6a95d9d98aa9b05b66e5e1
+  - enabled: 1
+    path: Assets/Scenes/GhostGobbler.unity
+    guid: 06fc3f387cc7d8d5fa990c9a46cce68b
   m_configObjects: {}
