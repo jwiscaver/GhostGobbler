@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int initialLives = 3;
 
     [Tooltip("Delay before hiding the 'Ready' text (in seconds).")]
-    [SerializeField] private float readyTextDisplayTime = 3f;
+    [SerializeField] private float readyTextDisplayTime = 4f;
 
     [Tooltip("Delay before resetting the game state after Pacman is eaten (in seconds).")]
     [SerializeField] private float resetStateDelay = 3f;
@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
     private void StartNewRound()
     {
         gameOverText.enabled = false;
+        AudioManager.Instance.PlayIntro();
         ShowReadyText();
 
         foreach (Transform pellet in pellets)
@@ -229,6 +230,9 @@ public class GameManager : MonoBehaviour
     {
         isGameReady = true;
 
+        AudioManager.Instance.PlayNormalGhostMusic();
+        AudioManager.Instance.PlayChomp();
+
         foreach (GhostMovement ghostMovement in ghostMovements)
         {
             ghostMovement.enabled = true;
@@ -244,7 +248,10 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator PacmanDeathSequence()
     {
-        // Stop all movements
+        AudioManager.Instance.StopChomp();
+        AudioManager.Instance.StopNormalGhostMusic();
+        AudioManager.Instance.PlayDeath();
+
         pacmanMovement.enabled = false;
         foreach (GhostMovement ghostMovement in ghostMovements)
         {
@@ -289,6 +296,8 @@ public class GameManager : MonoBehaviour
 
         // Increase the ghost multiplier for the next ghost
         ghostMultiplier++;
+
+        AudioManager.Instance.PlayGhostKill();
     }
 
     private void ShowPoints(Ghost ghost, int points)
@@ -334,6 +343,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private IEnumerator PlayMusicTransitionFromFrightenedToNormal(float duration)
+    {
+        AudioManager.Instance.PlayGhostFrightened();
+        yield return new WaitForSeconds(duration);
+        AudioManager.Instance.StopGhostFrightened();
+        AudioManager.Instance.PlayChomp();
+        AudioManager.Instance.PlayNormalGhostMusic();
+    }
+
     public void PowerPelletEaten(PowerPellet pellet)
     {
         foreach (Ghost ghost in ghosts)
@@ -342,6 +360,7 @@ public class GameManager : MonoBehaviour
         }
 
         PelletEaten(pellet);
+        StartCoroutine(PlayMusicTransitionFromFrightenedToNormal(pellet.duration));
         StopCoroutine(nameof(ResetGhostMultiplierAfterDelay));
         StartCoroutine(ResetGhostMultiplierAfterDelay(resetGhostMultiplierDelay));
     }
@@ -364,6 +383,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         ResetGameState();
         ShowReadyText();
+        AudioManager.Instance.PlayIntro();
     }
 
     private IEnumerator StartNewRoundAfterDelay(float delay)

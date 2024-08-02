@@ -34,6 +34,7 @@ public class Fruit : MonoBehaviour
             uiManager.ShowPoints(points);
         }
 
+        AudioManager.Instance.PlayFruitCollect();
         Destroy(gameObject);
     }
 }
