@@ -28,4 +28,9 @@ public class Menu : MonoBehaviour
     {
         SceneManager.LoadScene("GhostGobbler");
     }
+
+    public void ExtraMode()
+    {
+        SceneManager.LoadScene("GhostGobbler");
+    }
 }

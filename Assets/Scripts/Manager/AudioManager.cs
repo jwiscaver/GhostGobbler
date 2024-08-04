@@ -25,14 +25,26 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // waka 
     public void PlayChomp()
     {
-        PlayClip(chompSource);
+        PlayClip(chompSource, loop: true);
     }
 
     public void StopChomp()
     {
         chompSource.Stop();
+    }
+
+    // siren
+    public void PlayNormalGhostMusic()
+    {
+        PlayClip(normalGhostSource, true);
+    }
+
+    public void StopNormalGhostMusic()
+    {
+        normalGhostSource.Stop();
     }
 
     public void PlayDeath()
@@ -55,16 +67,6 @@ public class AudioManager : MonoBehaviour
         PlayClip(introSource);
     }
 
-    public void PlayNormalGhostMusic()
-    {
-        PlayClip(normalGhostSource, true);
-    }
-
-    public void StopNormalGhostMusic()
-    {
-        normalGhostSource.Stop();
-    }
-
     public void PlayGhostFrightened()
     {
         PlayClip(ghostFrightenedSource);
@@ -77,10 +79,10 @@ public class AudioManager : MonoBehaviour
 
     private void PlayClip(AudioSource source, bool loop = false)
     {
-        if (source.isPlaying)
+        /*if (source.isPlaying)
         {
             source.Stop();
-        }
+        }*/
         source.loop = loop;
         source.Play();
     }

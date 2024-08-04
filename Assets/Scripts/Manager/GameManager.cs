@@ -230,15 +230,15 @@ public class GameManager : MonoBehaviour
     {
         isGameReady = true;
 
-        AudioManager.Instance.PlayNormalGhostMusic();
-        AudioManager.Instance.PlayChomp();
-
         foreach (GhostMovement ghostMovement in ghostMovements)
         {
             ghostMovement.enabled = true;
         }
 
         pacmanMovement.enabled = true;
+
+        AudioManager.Instance.PlayNormalGhostMusic();
+        AudioManager.Instance.PlayChomp();
     }
 
     public void PacmanEaten()
@@ -291,14 +291,23 @@ public class GameManager : MonoBehaviour
         int points = 200 * (int)Mathf.Pow(2, ghostMultiplier - 1);
         SetScore(score + points);
 
-        // Show points in the UI
+        AudioManager.Instance.PlayGhostKill();
+
         ShowPoints(ghost, points);
 
         // Increase the ghost multiplier for the next ghost
         ghostMultiplier++;
 
-        AudioManager.Instance.PlayGhostKill();
+        StartCoroutine(GhostEatenDelay(1f)); // Start the coroutine
     }
+
+    private IEnumerator GhostEatenDelay(float delay)
+    {
+        Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(delay); // Use WaitForSecondsRealtime for real-time delay
+        Time.timeScale = 1f;
+    }
+
 
     private void ShowPoints(Ghost ghost, int points)
     {
