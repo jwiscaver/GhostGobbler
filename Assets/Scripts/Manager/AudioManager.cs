@@ -28,12 +28,20 @@ public class AudioManager : MonoBehaviour
     // waka 
     public void PlayChomp()
     {
-        PlayClip(chompSource, loop: true);
+        if (!IsChompPlaying())
+        {
+            PlayClip(chompSource, loop: false);
+        }
     }
 
     public void StopChomp()
     {
         chompSource.Stop();
+    }
+
+    public bool IsChompPlaying()
+    {
+        return chompSource.isPlaying;
     }
 
     // siren

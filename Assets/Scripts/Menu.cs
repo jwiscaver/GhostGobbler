@@ -5,20 +5,20 @@ using TMPro;
 
 public class Menu : MonoBehaviour
 {
+    public GameObject infoMenuUI;
     public TextMeshProUGUI hoverText;
 
     void Start()
     {
         hoverText.text = "";
+        infoMenuUI.SetActive(false);
     }
 
-    // Method to show text
     public void OnHoverEnter(string text)
     {
         hoverText.text = text;
     }
 
-    // Method to hide text
     public void OnHoverExit()
     {
         hoverText.text = "";
@@ -32,5 +32,10 @@ public class Menu : MonoBehaviour
     public void ExtraMode()
     {
         SceneManager.LoadScene("GhostGobbler");
+    }
+
+    public void Information()
+    {
+        infoMenuUI.SetActive(!infoMenuUI.activeSelf);
     }
 }

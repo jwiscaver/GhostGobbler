@@ -12,6 +12,7 @@ public class Movement : MonoBehaviour
     public Vector2 Direction { get; private set; }
     public Vector2 nextDirection { get; private set; }
     public Vector3 startingPosition { get; private set; }
+    public bool IsMoving => Direction != Vector2.zero;
 
     private void Awake()
     {

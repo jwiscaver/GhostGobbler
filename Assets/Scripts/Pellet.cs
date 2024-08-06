@@ -13,6 +13,7 @@ public class Pellet : MonoBehaviour
 
     protected virtual void Eat()
     {
+        AudioManager.Instance.PlayChomp();
         GameManager.Instance.PelletEaten(this);
     }
 

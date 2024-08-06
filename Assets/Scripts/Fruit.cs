@@ -35,6 +35,7 @@ public class Fruit : MonoBehaviour
         }
 
         AudioManager.Instance.PlayFruitCollect();
+        GameManager.Instance.FruitEaten(); // Notify GameManager
         Destroy(gameObject);
     }
 }

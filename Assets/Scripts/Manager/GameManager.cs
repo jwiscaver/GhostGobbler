@@ -147,6 +147,8 @@ public class GameManager : MonoBehaviour
             pellet.gameObject.SetActive(true);
         }
 
+        pelletsEaten = 0; // Reset the pellets eaten counter
+        fruitActive = false; // Reset fruit active state
         ResetGameState();
         fruitUIManager.UpdateFruitUI(currentLevel);
     }
@@ -238,7 +240,6 @@ public class GameManager : MonoBehaviour
         pacmanMovement.enabled = true;
 
         AudioManager.Instance.PlayNormalGhostMusic();
-        AudioManager.Instance.PlayChomp();
     }
 
     public void PacmanEaten()
@@ -308,7 +309,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-
     private void ShowPoints(Ghost ghost, int points)
     {
         if (pointsDisplayPrefab != null)
@@ -318,10 +318,6 @@ public class GameManager : MonoBehaviour
 
             RectTransform rectTransform = popupInstance.GetComponent<RectTransform>();
             rectTransform.SetParent(gameUICanvas.transform, false);
-
-            //SpriteRenderer ghostSprite = ghost.GetComponent<SpriteRenderer>();
-            //float offsetAboveHead = ghostSprite.bounds.size.y / 2 + 2f;
-            //Vector3 adjustedPosition = ghost.transform.position + new Vector3(0, offsetAboveHead, 0);
 
             Vector2 screenPosition = Camera.main.WorldToScreenPoint(ghost.transform.position);
             rectTransform.position = screenPosition;
@@ -341,6 +337,8 @@ public class GameManager : MonoBehaviour
         pellet.gameObject.SetActive(false);
         pelletsEaten++;
 
+        Debug.Log($"Pellet eaten: {pelletsEaten}");
+
         CheckFruitSpawn();
 
         SetScore(score + pellet.Points);
@@ -357,7 +355,6 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlayGhostFrightened();
         yield return new WaitForSeconds(duration);
         AudioManager.Instance.StopGhostFrightened();
-        AudioManager.Instance.PlayChomp();
         AudioManager.Instance.PlayNormalGhostMusic();
     }
 
@@ -415,9 +412,11 @@ public class GameManager : MonoBehaviour
 
     private void CheckFruitSpawn()
     {
+        Debug.Log($"Pellets Eaten: {pelletsEaten}, Fruit Active: {fruitActive}");
         if ((pelletsEaten == 70 || pelletsEaten == 170) && !fruitActive)
         {
             FruitType fruitType = GetFruitTypeForLevel(currentLevel);
+            Debug.Log($"Attempting to spawn fruit: {fruitType} for level {currentLevel}");
             SpawnFruit(fruitType);
         }
     }
@@ -429,14 +428,75 @@ public class GameManager : MonoBehaviour
             Destroy(currentFruit);
         }
 
-        currentFruit = Instantiate(fruitPrefabs[(int)fruitType], fruitSpawnPoint.position, Quaternion.identity);
-        fruitActive = true;
-        fruitCoroutine = StartCoroutine(FruitLifetimeCoroutine());
+        Debug.Log($"Spawning fruit: {fruitType}");
+
+        try
+        {
+            int index = GetFruitPrefabIndex(fruitType);
+            Debug.Log($"Spawning fruit: {fruitType} at index {index}");
+            currentFruit = Instantiate(fruitPrefabs[index], fruitSpawnPoint.position, Quaternion.identity);
+            fruitActive = true;
+            fruitCoroutine = StartCoroutine(FruitLifetimeCoroutine());
+        }
+        catch (System.ArgumentOutOfRangeException ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+    }
+
+    private int GetFruitPrefabIndex(FruitType fruitType)
+    {
+        switch (fruitType)
+        {
+            case FruitType.Cherry:
+                return 0;
+            case FruitType.Strawberry:
+                return 1;
+            case FruitType.Orange:
+                return 2;
+            case FruitType.Apple:
+                return 3;
+            case FruitType.Melon:
+                return 4;
+            case FruitType.Galaxian:
+                return 5;
+            case FruitType.Bell:
+                return 6;
+            case FruitType.Key:
+                return 7;
+            default:
+                throw new System.ArgumentOutOfRangeException($"FruitType {fruitType} not mapped to a prefab index.");
+        }
+    }
+
+    private FruitType GetFruitTypeForLevel(int level)
+    {
+        // Define the order of fruits
+        FruitType[] fruitOrder = new FruitType[]
+        {
+            FruitType.Cherry,
+            FruitType.Strawberry,
+            FruitType.Orange,
+            FruitType.Apple,
+            FruitType.Melon,
+            FruitType.Galaxian,
+            FruitType.Bell,
+            FruitType.Key
+        };
+
+        if (level < 8)
+        {
+            return fruitOrder[level];
+        }
+        else
+        {
+            return fruitOrder[(level - 8) % 7]; // Rotate between the first 7 fruits after level 7
+        }
     }
 
     private IEnumerator FruitLifetimeCoroutine()
     {
-        yield return new WaitForSeconds(9f);
+        yield return new WaitForSeconds(9f); // Set the fruit lifetime duration
         if (currentFruit != null)
         {
             Destroy(currentFruit);
@@ -444,25 +504,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private FruitType GetFruitTypeForLevel(int level)
+    public void FruitEaten()
     {
-        if (level < 8)
-        {
-            return (FruitType)level;
-        }
-        else if (level < 19)
-        {
-            return (FruitType)((level - 8) % 7);
-        }
-        else
-        {
-            return FruitType.Key;
-        }
+        fruitActive = false;
     }
 
     private void LoadNextLevel()
     {
         currentLevel++;
+        Debug.Log($"Loading Next Level: {currentLevel}");
         StartNewRound();
     }
 }

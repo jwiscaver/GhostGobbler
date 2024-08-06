@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class FruitUIManager : MonoBehaviour
 {
-    [SerializeField] private Image[] fruitImages; // Array of UI Images to display fruits
-    [SerializeField] private Sprite[] fruitSprites; // Array of fruit sprites
+    [SerializeField] private Image[] fruitImages;
+    [SerializeField] private Sprite[] fruitSprites;
 
     private int[] fruitIndices = { 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 }; // Indices for each level
 
@@ -46,7 +46,7 @@ public class FruitUIManager : MonoBehaviour
         }
         else
         {
-            return 7; // Key sprite for level 13 and beyond
+            return 7;
         }
     }
 }

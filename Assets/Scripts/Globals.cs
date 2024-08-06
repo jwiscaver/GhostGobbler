@@ -13,5 +13,3 @@ public enum FruitType
     Bell = 3000,
     Key = 5000
 }
-
-
