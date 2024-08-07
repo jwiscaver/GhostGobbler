@@ -147,8 +147,8 @@ public class GameManager : MonoBehaviour
             pellet.gameObject.SetActive(true);
         }
 
-        pelletsEaten = 0; // Reset the pellets eaten counter
-        fruitActive = false; // Reset fruit active state
+        pelletsEaten = 0;
+        fruitActive = false;
         ResetGameState();
         fruitUIManager.UpdateFruitUI(currentLevel);
     }
@@ -259,19 +259,15 @@ public class GameManager : MonoBehaviour
             ghostMovement.enabled = false;
         }
 
-        // Short delay before playing the death animation
         yield return new WaitForSeconds(1f);
 
-        // Hide the ghosts
         foreach (Ghost ghost in ghosts)
         {
             ghost.gameObject.SetActive(false);
         }
 
-        // Play death animation
         pacman.DeathSequence();
 
-        // Wait for the death animation to finish (assuming 1 second for the animation)
         yield return new WaitForSeconds(1f);
 
         SetLives(lives - 1);
@@ -288,7 +284,6 @@ public class GameManager : MonoBehaviour
 
     public void GhostEaten(Ghost ghost)
     {
-        // Points calculation based on ghostMultiplier
         int points = 200 * (int)Mathf.Pow(2, ghostMultiplier - 1);
         SetScore(score + points);
 
@@ -296,10 +291,9 @@ public class GameManager : MonoBehaviour
 
         ShowPoints(ghost, points);
 
-        // Increase the ghost multiplier for the next ghost
         ghostMultiplier++;
 
-        StartCoroutine(GhostEatenDelay(1f)); // Start the coroutine
+        StartCoroutine(GhostEatenDelay(1f));
     }
 
     private IEnumerator GhostEatenDelay(float delay)
@@ -471,7 +465,6 @@ public class GameManager : MonoBehaviour
 
     private FruitType GetFruitTypeForLevel(int level)
     {
-        // Define the order of fruits
         FruitType[] fruitOrder = new FruitType[]
         {
             FruitType.Cherry,
@@ -496,7 +489,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator FruitLifetimeCoroutine()
     {
-        yield return new WaitForSeconds(9f); // Set the fruit lifetime duration
+        yield return new WaitForSeconds(9f);
         if (currentFruit != null)
         {
             Destroy(currentFruit);
