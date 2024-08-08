@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &138846722341335475
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6097408787071388976}
+  - component: {fileID: 6157688518086379736}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6097408787071388976
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138846722341335475}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6157688518086379736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138846722341335475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2bf445c53cf5dd43bb5f47ad6f11f59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghosts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  pacman: {fileID: 0}
+  pellets: {fileID: 0}
+  gameOverText: {fileID: 0}
+  scoreText: {fileID: 0}
+  highScoreText: {fileID: 0}
+  livesDisplay: {fileID: 0}
+  lifeSprite: {fileID: 182291843, guid: 60feead7fb72f12bdb792432226aed89, type: 3}
+  readyText: {fileID: 0}
+  initialLives: 3
+  readyTextDisplayTime: 4
+  resetStateDelay: 3
+  newRoundDelay: 3
+  resetGhostMultiplierDelay: 3
+  fruitPrefabs:
+  - {fileID: 7410402327698796146, guid: 2c737d4226aad3b29961996d5daafd0d, type: 3}
+  - {fileID: 556301313795556958, guid: 3f4b1817c50b39385bc1245d01ac142e, type: 3}
+  - {fileID: 3268196936579024481, guid: c1500295ba75ab4dd9ef098420ca3a73, type: 3}
+  - {fileID: 7235781070340829203, guid: d64d039edc1627dc9b59f9c17fae61bc, type: 3}
+  - {fileID: 2572209821603772050, guid: 2800b7cd777a98c1692aa0dcd4f304fe, type: 3}
+  - {fileID: 418724582218403385, guid: 0928a680c9a2e14eda4965c5d46f6f5d, type: 3}
+  - {fileID: 8334516586235830498, guid: a1a61ea6cc69b7bb7ae7000d61d39e11, type: 3}
+  - {fileID: 3419215222246053268, guid: 255b131820bd8aeb2a1f57ebfa7f947c, type: 3}
+  fruitSpawnPoint: {fileID: 0}
+  pointsDisplayPrefab: {fileID: 7682265527993650493, guid: 09eb3e65ac6910f5498320108a3b7abf, type: 3}
+  uiManager: {fileID: 0}
+  fruitUIManager: {fileID: 0}

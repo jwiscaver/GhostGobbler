@@ -50,9 +50,6 @@ public class GameManager : MonoBehaviour
     [Tooltip("Delay before resetting the ghost multiplier after a power pellet is eaten (in seconds).")]
     [SerializeField] private float resetGhostMultiplierDelay = 3f;
 
-    [Tooltip("Fruit UI Manager")]
-    [SerializeField] private FruitUIManager fruitUIManager;
-
     [Tooltip("Fruit Prefabs")]
     [SerializeField] private GameObject[] fruitPrefabs;
 
@@ -61,6 +58,12 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Prefab for displaying points when a ghost is eaten.")]
     [SerializeField] private GameObject pointsDisplayPrefab;
+
+    [Tooltip("Reference to the UIManager script.")]
+    [SerializeField] private UIManager uiManager;
+
+    [Tooltip("Fruit UI Manager")]
+    [SerializeField] private FruitUIManager fruitUIManager;
 
     private int ghostMultiplier = 1;
     private int lives;
@@ -74,7 +77,6 @@ public class GameManager : MonoBehaviour
     private Coroutine fruitCoroutine;
     private Canvas gameUICanvas;
 
-    private List<Image> lifeImages = new List<Image>();
     private List<GhostMovement> ghostMovements = new List<GhostMovement>();
     private Movement pacmanMovement;
 
@@ -96,15 +98,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        foreach (Transform child in livesDisplay)
-        {
-            Image image = child.GetComponent<Image>();
-            if (image != null)
-            {
-                lifeImages.Add(image);
-            }
-        }
-
         foreach (Ghost ghost in ghosts)
         {
             GhostMovement movement = ghost.GetComponent<GhostMovement>();
@@ -133,6 +126,7 @@ public class GameManager : MonoBehaviour
         SetScore(0);
         SetLives(initialLives);
         currentLevel = 0;
+        Debug.Log($"Starting New Game - Level: {currentLevel}");
         StartNewRound();
     }
 
@@ -151,6 +145,7 @@ public class GameManager : MonoBehaviour
         fruitActive = false;
         ResetGameState();
         fruitUIManager.UpdateFruitUI(currentLevel);
+        Debug.Log($"Starting New Round - Level: {currentLevel}");
     }
 
     private void ResetGameState()
@@ -185,13 +180,12 @@ public class GameManager : MonoBehaviour
     private void SetLives(int lives)
     {
         this.lives = lives;
-        UpdateLivesDisplay();
+        uiManager.UpdateLivesDisplay(lives);
     }
 
-    public void SetScore(int score)
+    public void SetScore(int newScore)
     {
-        this.score = score;
-        scoreText.text = score.ToString("D2");
+        score = newScore;
 
         if (score > highScore)
         {
@@ -199,20 +193,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetHighScore(int score)
+    private void SetHighScore(int newHighScore)
     {
-        highScore = score;
-        highScoreText.text = highScore.ToString("D2");
+        highScore = newHighScore;
+        uiManager.UpdateHighScoreUI(highScore);
         PlayerPrefs.SetInt("HighScore", highScore);
         PlayerPrefs.Save();
-    }
-
-    private void UpdateLivesDisplay()
-    {
-        for (int i = 0; i < lifeImages.Count; i++)
-        {
-            lifeImages[i].enabled = i < lives;
-        }
     }
 
     private void ShowReadyText()
@@ -289,7 +275,7 @@ public class GameManager : MonoBehaviour
 
         AudioManager.Instance.PlayGhostKill();
 
-        ShowPoints(ghost, points);
+        uiManager.ShowPoints(ghost, points);
 
         ghostMultiplier++;
 
@@ -299,31 +285,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator GhostEatenDelay(float delay)
     {
         Time.timeScale = 0f;
-        yield return new WaitForSecondsRealtime(delay); // Use WaitForSecondsRealtime for real-time delay
+        yield return new WaitForSecondsRealtime(delay);
         Time.timeScale = 1f;
-    }
-
-    private void ShowPoints(Ghost ghost, int points)
-    {
-        if (pointsDisplayPrefab != null)
-        {
-            GameObject popupInstance = Instantiate(pointsDisplayPrefab);
-            gameUICanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
-
-            RectTransform rectTransform = popupInstance.GetComponent<RectTransform>();
-            rectTransform.SetParent(gameUICanvas.transform, false);
-
-            Vector2 screenPosition = Camera.main.WorldToScreenPoint(ghost.transform.position);
-            rectTransform.position = screenPosition;
-
-            TMP_Text pointsText = popupInstance.GetComponent<TMP_Text>();
-            if (pointsText != null)
-            {
-                pointsText.text = "+" + points.ToString();
-            }
-
-            Destroy(popupInstance, 1.0f);
-        }
     }
 
     public void PelletEaten(Pellet pellet)
@@ -336,6 +299,7 @@ public class GameManager : MonoBehaviour
         CheckFruitSpawn();
 
         SetScore(score + pellet.Points);
+        uiManager.UpdateScoreUI(score);
 
         if (!HasRemainingPellets())
         {
@@ -389,7 +353,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator StartNewRoundAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        StartNewRound();
+        LoadNextLevel();
     }
 
     private IEnumerator ResetGhostMultiplierAfterDelay(float delay)
@@ -406,7 +370,7 @@ public class GameManager : MonoBehaviour
 
     private void CheckFruitSpawn()
     {
-        Debug.Log($"Pellets Eaten: {pelletsEaten}, Fruit Active: {fruitActive}");
+        Debug.Log($"Pellets Eaten: {pelletsEaten}, Fruit Active: {fruitActive}, Level: {currentLevel}");
         if ((pelletsEaten == 70 || pelletsEaten == 170) && !fruitActive)
         {
             FruitType fruitType = GetFruitTypeForLevel(currentLevel);
@@ -422,20 +386,10 @@ public class GameManager : MonoBehaviour
             Destroy(currentFruit);
         }
 
-        Debug.Log($"Spawning fruit: {fruitType}");
-
-        try
-        {
-            int index = GetFruitPrefabIndex(fruitType);
-            Debug.Log($"Spawning fruit: {fruitType} at index {index}");
-            currentFruit = Instantiate(fruitPrefabs[index], fruitSpawnPoint.position, Quaternion.identity);
-            fruitActive = true;
-            fruitCoroutine = StartCoroutine(FruitLifetimeCoroutine());
-        }
-        catch (System.ArgumentOutOfRangeException ex)
-        {
-            Debug.LogError(ex.Message);
-        }
+        int index = GetFruitPrefabIndex(fruitType);
+        currentFruit = Instantiate(fruitPrefabs[index], fruitSpawnPoint.position, Quaternion.identity);
+        fruitActive = true;
+        fruitCoroutine = StartCoroutine(FruitLifetimeCoroutine());
     }
 
     private int GetFruitPrefabIndex(FruitType fruitType)
@@ -481,9 +435,13 @@ public class GameManager : MonoBehaviour
         {
             return fruitOrder[level];
         }
+        else if (level < 19)
+        {
+            return fruitOrder[(level - 1) % 7 + 1];
+        }
         else
         {
-            return fruitOrder[(level - 8) % 7]; // Rotate between the first 7 fruits after level 7
+            return FruitType.Key;
         }
     }
 
