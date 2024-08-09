@@ -3,9 +3,14 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class AnimatedSprite : MonoBehaviour
 {
-    public Sprite[] sprites = new Sprite[0];
-    public float animationTime = 0.25f;
-    public bool loop = true;
+    [Tooltip("Sprite array for handling animations.")]
+    [SerializeField] public Sprite[] sprites = new Sprite[0];
+
+    [Tooltip("Time for a complete cycle of the animation")]
+    [SerializeField] public float animationTime = 0.125f;
+
+    [Tooltip("Does the animation loop?")]
+    [SerializeField] public bool loop = true;
 
     private SpriteRenderer spriteRenderer;
     private int animationFrame;
@@ -32,17 +37,20 @@ public class AnimatedSprite : MonoBehaviour
 
     private void Advance()
     {
-        if (!spriteRenderer.enabled) {
+        if (!spriteRenderer.enabled)
+        {
             return;
         }
 
         animationFrame++;
 
-        if (animationFrame >= sprites.Length && loop) {
+        if (animationFrame >= sprites.Length && loop)
+        {
             animationFrame = 0;
         }
 
-        if (animationFrame >= 0 && animationFrame < sprites.Length) {
+        if (animationFrame >= 0 && animationFrame < sprites.Length)
+        {
             spriteRenderer.sprite = sprites[animationFrame];
         }
     }

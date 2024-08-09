@@ -1,19 +1,15 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Movement))]
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(AnimatedSprite))]
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Collider2D))]
 public class Pacman : MonoBehaviour
 {
-    [Tooltip("Sprite renderer component for Pacman.")]
-    [SerializeField]
+    [Tooltip("Animation component for handling animations.")]
+    [SerializeField] private AnimatedSprite deathSequence;
+
     private SpriteRenderer spriteRenderer;
-
-    [Tooltip("Animator component for handling animations.")]
-    [SerializeField]
-    private Animator animator;
-
     private Movement movement;
     private new Collider2D collider;
 
@@ -22,7 +18,6 @@ public class Pacman : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         movement = GetComponent<Movement>();
         collider = GetComponent<Collider2D>();
-        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -62,18 +57,18 @@ public class Pacman : MonoBehaviour
         enabled = true;
         spriteRenderer.enabled = true;
         collider.enabled = true;
+        deathSequence.enabled = false;
         movement.ResetState();
         gameObject.SetActive(true);
-
-        animator.ResetTrigger("Die");
-        animator.Play("Movement");
     }
 
     public void DeathSequence()
     {
         enabled = false;
-        movement.enabled = false;
+        spriteRenderer.enabled = false;
         collider.enabled = false;
-        animator.SetTrigger("Die");
+        movement.enabled = false;
+        deathSequence.enabled = true;
+        deathSequence.Restart();
     }
 }

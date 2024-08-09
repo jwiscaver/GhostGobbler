@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 987934221583629755}
   - component: {fileID: 1804145435147877757}
   - component: {fileID: 6631260957584396886}
-  - component: {fileID: 4834974777263562481}
   - component: {fileID: 919017735745656199}
   - component: {fileID: 1468719678601338772}
+  - component: {fileID: 3290908478715500578}
   m_Layer: 6
   m_Name: Pacman
   m_TagString: Untagged
@@ -151,27 +151,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!95 &4834974777263562481
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 852355266971372241}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 00b8fe0dbe7f89ea7b2f19b0fcd70ad4, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &919017735745656199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 987934221583629755}
+  deathSequence: {fileID: 0}
 --- !u!114 &1468719678601338772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,3 +183,18 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 512
+--- !u!114 &3290908478715500578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852355266971372241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824908b24fd58c84296be726049e76aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites: []
+  animationTime: 0.25
+  loop: 1

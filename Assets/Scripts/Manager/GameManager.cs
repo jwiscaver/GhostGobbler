@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
         SetScore(0);
         SetLives(initialLives);
         currentLevel = 0;
-        Debug.Log($"Starting New Game - Level: {currentLevel}");
+        //Debug.Log($"Starting New Game - Level: {currentLevel}");
         StartNewRound();
     }
 
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
         fruitActive = false;
         ResetGameState();
         fruitUIManager.UpdateFruitUI(currentLevel);
-        Debug.Log($"Starting New Round - Level: {currentLevel}");
+        //Debug.Log($"Starting New Round - Level: {currentLevel}");
     }
 
     private void ResetGameState()
@@ -235,26 +235,30 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator PacmanDeathSequence()
     {
+        // Stop sounds and movements
         AudioManager.Instance.StopChomp();
         AudioManager.Instance.StopNormalGhostMusic();
         AudioManager.Instance.PlayDeath();
 
-        pacmanMovement.enabled = false;
+        yield return new WaitForSeconds(.1f);
+
         foreach (GhostMovement ghostMovement in ghostMovements)
         {
             ghostMovement.enabled = false;
         }
-
-        yield return new WaitForSeconds(1f);
 
         foreach (Ghost ghost in ghosts)
         {
             ghost.gameObject.SetActive(false);
         }
 
+        pacmanMovement.enabled = false;
+
+        yield return new WaitForSeconds(.1f);
+
         pacman.DeathSequence();
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.0f);
 
         SetLives(lives - 1);
 
@@ -267,6 +271,15 @@ public class GameManager : MonoBehaviour
             EndGame();
         }
     }
+
+    private IEnumerator ResetStateAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ResetGameState();
+        ShowReadyText();
+        AudioManager.Instance.PlayIntro();
+    }
+
 
     public void GhostEaten(Ghost ghost)
     {
@@ -340,14 +353,6 @@ public class GameManager : MonoBehaviour
         }
 
         return false;
-    }
-
-    private IEnumerator ResetStateAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        ResetGameState();
-        ShowReadyText();
-        AudioManager.Instance.PlayIntro();
     }
 
     private IEnumerator StartNewRoundAfterDelay(float delay)
