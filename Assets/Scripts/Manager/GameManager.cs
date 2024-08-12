@@ -235,12 +235,9 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator PacmanDeathSequence()
     {
-        // Stop sounds and movements
         AudioManager.Instance.StopChomp();
         AudioManager.Instance.StopNormalGhostMusic();
         AudioManager.Instance.PlayDeath();
-
-        yield return new WaitForSeconds(.1f);
 
         foreach (GhostMovement ghostMovement in ghostMovements)
         {
@@ -254,11 +251,9 @@ public class GameManager : MonoBehaviour
 
         pacmanMovement.enabled = false;
 
-        yield return new WaitForSeconds(.1f);
+        yield return new WaitForSeconds(.5f);
 
         pacman.DeathSequence();
-
-        yield return new WaitForSeconds(1.0f);
 
         SetLives(lives - 1);
 
@@ -279,7 +274,6 @@ public class GameManager : MonoBehaviour
         ShowReadyText();
         AudioManager.Instance.PlayIntro();
     }
-
 
     public void GhostEaten(Ghost ghost)
     {
@@ -307,7 +301,7 @@ public class GameManager : MonoBehaviour
         pellet.gameObject.SetActive(false);
         pelletsEaten++;
 
-        Debug.Log($"Pellet eaten: {pelletsEaten}");
+        //Debug.Log($"Pellet eaten: {pelletsEaten}");
 
         CheckFruitSpawn();
 
@@ -375,11 +369,11 @@ public class GameManager : MonoBehaviour
 
     private void CheckFruitSpawn()
     {
-        Debug.Log($"Pellets Eaten: {pelletsEaten}, Fruit Active: {fruitActive}, Level: {currentLevel}");
+        //Debug.Log($"Pellets Eaten: {pelletsEaten}, Fruit Active: {fruitActive}, Level: {currentLevel}");
         if ((pelletsEaten == 70 || pelletsEaten == 170) && !fruitActive)
         {
             FruitType fruitType = GetFruitTypeForLevel(currentLevel);
-            Debug.Log($"Attempting to spawn fruit: {fruitType} for level {currentLevel}");
+            // Debug.Log($"Attempting to spawn fruit: {fruitType} for level {currentLevel}");
             SpawnFruit(fruitType);
         }
     }
@@ -468,7 +462,7 @@ public class GameManager : MonoBehaviour
     private void LoadNextLevel()
     {
         currentLevel++;
-        Debug.Log($"Loading Next Level: {currentLevel}");
+        //Debug.Log($"Loading Next Level: {currentLevel}");
         StartNewRound();
     }
 }
