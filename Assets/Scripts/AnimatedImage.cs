@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(SpriteRenderer))]
-public class AnimatedSprite : MonoBehaviour
+[RequireComponent(typeof(Image))]
+public class AnimatedImage : MonoBehaviour
 {
     [Tooltip("Sprite array for handling animations.")]
     [SerializeField] public Sprite[] sprites = new Sprite[0];
@@ -12,22 +13,22 @@ public class AnimatedSprite : MonoBehaviour
     [Tooltip("Does the animation loop?")]
     [SerializeField] public bool loop = true;
 
-    private SpriteRenderer spriteRenderer;
+    private Image imageComponent;
     private int animationFrame;
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        imageComponent = GetComponent<Image>();
     }
 
     private void OnEnable()
     {
-        spriteRenderer.enabled = true;
+        imageComponent.enabled = true;
     }
 
     private void OnDisable()
     {
-        spriteRenderer.enabled = false;
+        imageComponent.enabled = false;
     }
 
     private void Start()
@@ -37,7 +38,7 @@ public class AnimatedSprite : MonoBehaviour
 
     private void Advance()
     {
-        if (!spriteRenderer.enabled)
+        if (!imageComponent.enabled)
         {
             return;
         }
@@ -51,14 +52,13 @@ public class AnimatedSprite : MonoBehaviour
 
         if (animationFrame >= 0 && animationFrame < sprites.Length)
         {
-            spriteRenderer.sprite = sprites[animationFrame];
+            imageComponent.sprite = sprites[animationFrame];
         }
     }
 
     public void Restart()
     {
         animationFrame = -1;
-
         Advance();
     }
 }
