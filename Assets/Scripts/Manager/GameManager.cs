@@ -126,7 +126,6 @@ public class GameManager : MonoBehaviour
         SetScore(0);
         SetLives(initialLives);
         currentLevel = 0;
-        //Debug.Log($"Starting New Game - Level: {currentLevel}");
         StartNewRound();
     }
 
@@ -139,13 +138,18 @@ public class GameManager : MonoBehaviour
         foreach (Transform pellet in pellets)
         {
             pellet.gameObject.SetActive(true);
+
+            SpriteRenderer spriteRenderer = pellet.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = true;
+            }
         }
 
         pelletsEaten = 0;
         fruitActive = false;
         ResetGameState();
         fruitUIManager.UpdateFruitUI(currentLevel);
-        //Debug.Log($"Starting New Round - Level: {currentLevel}");
     }
 
     private void ResetGameState()
@@ -301,8 +305,6 @@ public class GameManager : MonoBehaviour
         pellet.gameObject.SetActive(false);
         pelletsEaten++;
 
-        //Debug.Log($"Pellet eaten: {pelletsEaten}");
-
         CheckFruitSpawn();
 
         SetScore(score + pellet.Points);
@@ -369,11 +371,9 @@ public class GameManager : MonoBehaviour
 
     private void CheckFruitSpawn()
     {
-        //Debug.Log($"Pellets Eaten: {pelletsEaten}, Fruit Active: {fruitActive}, Level: {currentLevel}");
-        if ((pelletsEaten == 70 || pelletsEaten == 170) && !fruitActive)
+          if ((pelletsEaten == 70 || pelletsEaten == 170) && !fruitActive)
         {
             FruitType fruitType = GetFruitTypeForLevel(currentLevel);
-            // Debug.Log($"Attempting to spawn fruit: {fruitType} for level {currentLevel}");
             SpawnFruit(fruitType);
         }
     }
@@ -462,7 +462,6 @@ public class GameManager : MonoBehaviour
     private void LoadNextLevel()
     {
         currentLevel++;
-        //Debug.Log($"Loading Next Level: {currentLevel}");
         StartNewRound();
     }
 }
