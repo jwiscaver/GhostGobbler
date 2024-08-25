@@ -6,14 +6,26 @@ public class PowerPellet : Pellet
     public float duration = 9f;
     private FlashBehavior flashBehavior;
 
-    void Awake()
-    {
-        flashBehavior = GetComponent<FlashBehavior>();
-    }
-
     private void Start()
     {
-        flashBehavior.Flash();
+        flashBehavior = GetComponent<FlashBehavior>();
+
+        if (flashBehavior != null)
+        {
+            flashBehavior.Flash();
+        }
+        else
+        {
+            Debug.LogError("FlashBehavior is missing on the PowerPellet GameObject.");
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (flashBehavior != null)
+        {
+            flashBehavior.Flash();
+        }
     }
 
     protected override void Eat()

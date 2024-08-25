@@ -332,6 +332,12 @@ public class GameManager : MonoBehaviour
             ghost.frightened.Enable(pellet.duration);
         }
 
+         SpriteRenderer spriteRenderer = pellet.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = true;
+            }
+
         PelletEaten(pellet);
         StartCoroutine(PlayMusicTransitionFromFrightenedToNormal(pellet.duration));
         StopCoroutine(nameof(ResetGhostMultiplierAfterDelay));
