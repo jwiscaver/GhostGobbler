@@ -12,6 +12,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource normalGhostSource;
     [SerializeField] private AudioSource ghostFrightenedSource;
 
+    private AudioSource[] allAudioSources;
+
     private void Awake()
     {
         if (Instance != null)
@@ -22,10 +24,43 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            allAudioSources = GetComponentsInChildren<AudioSource>();
+        }
+    }
+    
+    public void StopAllAudio()
+    {
+        foreach (AudioSource source in allAudioSources)
+        {
+            if (source.isPlaying)
+            {
+                source.Stop();
+            }
         }
     }
 
-    // waka 
+    public void PauseAllAudio()
+    {
+        foreach (AudioSource source in allAudioSources)
+        {
+            if (source.isPlaying)
+            {
+                source.Pause();
+            }
+        }
+    }
+
+    public void ResumeAllAudio()
+    {
+        foreach (AudioSource source in allAudioSources)
+        {
+            if (source.time > 0) // Only resume sources that were previously playing
+            {
+                source.UnPause();
+            }
+        }
+    }
+
     public void PlayChomp()
     {
         if (!IsChompPlaying())
@@ -44,7 +79,6 @@ public class AudioManager : MonoBehaviour
         return chompSource.isPlaying;
     }
 
-    // siren
     public void PlayNormalGhostMusic()
     {
         PlayClip(normalGhostSource, true);
@@ -87,10 +121,6 @@ public class AudioManager : MonoBehaviour
 
     private void PlayClip(AudioSource source, bool loop = false)
     {
-        /*if (source.isPlaying)
-        {
-            source.Stop();
-        }*/
         source.loop = loop;
         source.Play();
     }

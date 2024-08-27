@@ -17,6 +17,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
+        AudioManager.Instance.PauseAllAudio();
     }
 
     public void ResumeGame()
@@ -24,11 +25,15 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
+        AudioManager.Instance.ResumeAllAudio();
     }
 
     public void ReturnToMainMenu()
     {
-        Time.timeScale = 1f;
+        Time.timeScale = 1f;     
+        isPaused = false;   
+        AudioManager.Instance.StopAllAudio();
+        Destroy(GameManager.Instance.gameObject);
         SceneManager.LoadScene("Menu");
     }
 }

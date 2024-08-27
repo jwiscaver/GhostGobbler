@@ -13,6 +13,7 @@ public class GhostMovement : MonoBehaviour
     public Vector2 nextDirection { get; private set; }
     public Vector3 startingPosition { get; private set; }
 
+    
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody2D>();
@@ -36,7 +37,7 @@ public class GhostMovement : MonoBehaviour
 
     private void Update()
     {
-        if (nextDirection != Vector2.zero)
+        if (nextDirection != Vector2.zero && !Occupied(nextDirection))
         {
             SetDirection(nextDirection);
         }
