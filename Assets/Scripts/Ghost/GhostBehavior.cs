@@ -24,7 +24,6 @@ public abstract class GhostBehavior : MonoBehaviour
     {
         if (!gameObject.activeInHierarchy)
         {
-            Debug.LogWarning("Cannot enable behavior because the game object is inactive.");
             return;
         }
 
@@ -40,6 +39,12 @@ public abstract class GhostBehavior : MonoBehaviour
     private IEnumerator DisableAfterDuration(float duration)
     {
         yield return new WaitForSeconds(duration);
+
+        if (!gameObject.activeInHierarchy)
+        {
+            yield break;
+        }
+
         Disable();
     }
 
